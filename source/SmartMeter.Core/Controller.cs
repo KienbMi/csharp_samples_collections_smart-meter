@@ -41,13 +41,64 @@ namespace SmartMeter.Core
         {
             _holidays = new Dictionary<DateTime, string>();
 
-            throw new NotImplementedException();
+            string [] lines = File.ReadAllLines(Path.Combine(_inputFilePath, holidayFileName),Encoding.UTF8);
+
+            foreach (var line in lines)
+            {
+                string[] parts = line.Split(';');
+                string description = parts[0];
+                DateTime date = DateTime.Parse(parts[1]);
+
+                _holidays.Add(date, description);
+            }
         }
 
 
         private void InitMeasurements(string[] inputFileNames)
         {
             _measurements = new List<Day>();
+
+            Dictionary<DateTime, double> dailyMeasurements = new Dictionary<DateTime, double>();
+
+            foreach (var inputFileName in inputFileNames)
+            {
+                string[] lines = File.ReadAllLines(Path.Combine(_inputFilePath, inputFileName ), Encoding.UTF8);
+
+                foreach (var line in lines)
+                {
+                    string[] parts = line.Split(';');
+                    DateTime timestamp = DateTime.Parse(parts[0]);
+                    double measurement = double.Parse(parts[1]);
+
+                    if(dailyMeasurements.ContainsKey(timestamp.Date))
+                    {
+                        dailyMeasurements[timestamp.Date] += measurement;
+                    }
+                    else
+                    {
+                        //dailyMeasurements[timestamp.Date] = measurement;
+                        dailyMeasurements.Add(timestamp.Date, measurement);
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<DateTime, double> entries in dailyMeasurements)
+            {
+                if(_holidays.ContainsKey(entries.Key))
+                {
+                    // create Holiday
+                    //_measurments.Add
+                }
+                else
+                {
+                    // create normal Day
+                    _measurements.Add(new Day(entries.Key, entries.Value));
+                }
+            }
+
+
+
+
 
             throw new NotImplementedException();
         }
