@@ -38,8 +38,9 @@ namespace SmartMeter.UI
 
             File.WriteAllText(
                 Path.Combine(
-                    MyFile.GetFullFolderNameInApplicationTree("output")),
-                    $"measurements_{DateTime.Now.ToString("yyyyddMM_HHmmss")}.md",
+                    MyFile.GetFullFolderNameInApplicationTree("output"),
+                    $"measurements_{DateTime.Now.ToString("yyyyddMM_HHmmss")}.md"),
+                markdown,
                 Encoding.UTF8);
         }
     }
